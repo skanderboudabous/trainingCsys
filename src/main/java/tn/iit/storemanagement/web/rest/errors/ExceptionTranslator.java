@@ -45,4 +45,13 @@ public class ExceptionTranslator {
         builder = ResponseEntity.status(HttpStatus.CONFLICT);
         return builder.body(new ErrorVM("CONFLICT", exception.getMessage()));
     }
+
+    @ExceptionHandler(IllegalBusinessLogicException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ErrorVM> processIllegalBusinessLogic(IllegalBusinessLogicException exception) {
+        BodyBuilder builder;
+        builder = ResponseEntity.status(HttpStatus.CONFLICT);
+        return builder.body(new ErrorVM("CONFLICT", exception.getMessage()));
+    }
 }

@@ -10,8 +10,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import tn.iit.storemanagement.domain.Medicament;
 import tn.iit.storemanagement.dto.MedicamentDto;
 import tn.iit.storemanagement.services.MedicamentService;
+import tn.iit.storemanagement.web.rest.errors.MyResourceNotFoundException;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -55,6 +57,7 @@ public class MedicamentResource {
             bindingResults.addError(new FieldError("Medicament", "id", "Post does not allow a medicament with id"));
             throw new MethodArgumentNotValidException(null, bindingResults);
         }
+
         MedicamentDto result = medicamentService.save(medicamentDto);
         return ResponseEntity.created(new URI("/api/medicaments/" + result.getId())).body(result);
     }
@@ -63,6 +66,11 @@ public class MedicamentResource {
     public Collection<MedicamentDto> searches(@Valid @RequestBody List<Long> ids){
         return this.medicamentService.findAllByIds(ids);
     }
+    @PostMapping("/keyword")
+    public Collection<MedicamentDto> getByNameAndCategoryKeywords(@RequestParam(required=false) String name, @RequestParam(required=false) String category){
+        return this.medicamentService.findAllByNameKeyworkandCategoryNameKeyword(name, category);
+    }
+
 
     @PutMapping()
     public ResponseEntity<MedicamentDto> update(@Valid @RequestBody MedicamentDto medicamentDto, BindingResult bindingResults) throws MethodArgumentNotValidException {
@@ -74,6 +82,7 @@ public class MedicamentResource {
             bindingResults.addError(new FieldError("Medicament", "id", "Put does not allow a medicament without id"));
             throw new MethodArgumentNotValidException(null, bindingResults);
         }
+        MedicamentDto medicament=this.findOne(medicamentDto.getId());
         MedicamentDto result = medicamentService.save(medicamentDto);
         return ResponseEntity.ok(result);
     }

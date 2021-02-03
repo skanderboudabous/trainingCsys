@@ -1,5 +1,6 @@
 package tn.iit.storemanagement.utils;
 
+import tn.iit.storemanagement.web.rest.errors.IllegalBusinessLogicException;
 import tn.iit.storemanagement.web.rest.errors.MyResourceNotFoundException;
 
 public final class RestPreconditions {
@@ -46,6 +47,11 @@ public final class RestPreconditions {
         }
 
         return resource;
+    }
+    public static void checkBusinessLogic(final boolean expression,String message) {
+        if (!expression) {
+            throw new IllegalBusinessLogicException(message);
+        }
     }
 
 }

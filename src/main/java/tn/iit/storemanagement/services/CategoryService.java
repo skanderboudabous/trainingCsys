@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tn.iit.storemanagement.dao.CategoryDao;
 import tn.iit.storemanagement.domain.Category;
+import tn.iit.storemanagement.domain.Medicament;
 import tn.iit.storemanagement.dto.CategoryDto;
 import tn.iit.storemanagement.factories.CategoryFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,4 +42,8 @@ public class CategoryService {
     public Collection<CategoryDto> findAll(Pageable pageable){
         return CategoryFactory.categoriesToCategoriesDtos (this.categoryDao.findAll (pageable).getContent());
     }
+    public boolean nameExist(String name){
+        return this.categoryDao.existsByName(name);
+    }
+
 }

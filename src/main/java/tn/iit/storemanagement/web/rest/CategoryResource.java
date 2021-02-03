@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import tn.iit.storemanagement.dto.CategoryDto;
 import tn.iit.storemanagement.services.CategoryService;
+import tn.iit.storemanagement.utils.RestPreconditions;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -56,6 +57,7 @@ public class CategoryResource {
             bindingResults.addError(new FieldError("Category", "id", "Post does not allow a category with id"));
             throw new MethodArgumentNotValidException(null, bindingResults);
         }
+        RestPreconditions.checkBusinessLogic(!categoryService.nameExist(categoryDto.getName()),"Category " + categoryDto.getName()+" alredy exist");
         CategoryDto result = categoryService.save(categoryDto);
         return ResponseEntity.created(new URI("/api/categories/" + result.getId())).body(result);
     }
