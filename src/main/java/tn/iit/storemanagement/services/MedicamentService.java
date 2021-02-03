@@ -27,11 +27,7 @@ public class MedicamentService {
         return medicamentDto;
     }
 
-    public void deleteById(Long id){
-        if(!this.medicamentDao.existsById (id))
-            throw new MyResourceNotFoundException("Medicament is  missing with  id "+id);
-        this.medicamentDao.deleteById (id);
-    }
+
 
     @Transactional(readOnly = true)
     public MedicamentDto findOne(Long id){
@@ -46,5 +42,17 @@ public class MedicamentService {
     @Transactional(readOnly = true)
     public Collection<MedicamentDto> findAllByIds(List<Long> ids){
         return MedicamentFactory.medicamentsToMedicamentDtos (this.medicamentDao.findAllById (ids));
+    }
+    public void deleteById(Long id){
+        if(!this.medicamentDao.existsById (id))
+            throw new MyResourceNotFoundException("Medicament is  missing with  id "+id);
+        this.medicamentDao.deleteById (id);
+    }
+    public void deleteAllById(List<Long> ids) {
+        for(Long id : ids){
+            if(!this.medicamentDao.existsById (id))
+                throw new MyResourceNotFoundException("Medicament is  missing with  id "+id);
+            this.medicamentDao.deleteById (id);
+        }
     }
 }

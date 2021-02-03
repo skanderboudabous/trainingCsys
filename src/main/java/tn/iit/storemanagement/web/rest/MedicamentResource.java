@@ -1,6 +1,8 @@
 package tn.iit.storemanagement.web.rest;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +24,14 @@ import java.util.List;
 @RestController()
 public class MedicamentResource {
     private final MedicamentService medicamentService;
-
+    private final Logger logger= LoggerFactory.getLogger (CategoryResource.class);
     public MedicamentResource(MedicamentService medicamentService) {
         this.medicamentService = medicamentService;
     }
 
     @GetMapping("/{id}")
     public MedicamentDto findOne(@PathVariable("id") long id) {
+        this.logger.debug ("Getting Medicament {}",id);
         return this.medicamentService.findOne (id);
     }
 
@@ -38,11 +41,13 @@ public class MedicamentResource {
             @RequestParam(defaultValue = "3") int pageSize,
             @RequestParam(defaultValue = "id") String pageSort
     ) {
+        this.logger.debug ("Getting all medicaments");
         return this.medicamentService.findAll (PageRequest.of(pageNo,pageSize, Sort.by (pageSort).ascending ()));
     }
 
     @PostMapping
     public ResponseEntity<MedicamentDto> add(@Valid @RequestBody MedicamentDto medicamentDto, BindingResult bindingResults) throws URISyntaxException, MethodArgumentNotValidException {
+        this.logger.debug ("Adding new Medicament {}",medicamentDto.getName());
         if (bindingResults.hasErrors()) {
             throw new MethodArgumentNotValidException(null, bindingResults);
         }
@@ -60,12 +65,27 @@ public class MedicamentResource {
     }
 
     @PutMapping()
-    public MedicamentDto update(@Valid @RequestBody MedicamentDto medicamentDto) {
-        return this.medicamentService.save (medicamentDto);
+    public ResponseEntity<MedicamentDto> update(@Valid @RequestBody MedicamentDto medicamentDto, BindingResult bindingResults) throws MethodArgumentNotValidException {
+        this.logger.debug ("Updating Category {} with {}",medicamentDto.getId (),medicamentDto.getName ());
+        if (bindingResults.hasErrors()) {
+            throw new MethodArgumentNotValidException(null, bindingResults);
+        }
+        if (medicamentDto.getId() == null) {
+            bindingResults.addError(new FieldError("Medicament", "id", "Put does not allow a medicament without id"));
+            throw new MethodArgumentNotValidException(null, bindingResults);
+        }
+        MedicamentDto result = medicamentService.save(medicamentDto);
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") long id) {
+        this.logger.debug ("Deleting Medicament {}",id);
         this.medicamentService.deleteById (id);
+    }
+
+    @DeleteMapping("/searches")
+    public void deleteById(@Valid @RequestBody List<Long> ids){
+        this.medicamentService.deleteAllById(ids);
     }
 }

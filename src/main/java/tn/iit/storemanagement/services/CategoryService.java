@@ -1,5 +1,7 @@
 package tn.iit.storemanagement.services;
 
+import org.aspectj.apache.bcel.classfile.annotation.TypeAnnotationGen;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tn.iit.storemanagement.dao.CategoryDao;
 import tn.iit.storemanagement.domain.Category;
@@ -36,7 +38,7 @@ public class CategoryService {
         return CategoryFactory.categoryToCategoryDto (category);
     }
     @Transactional(readOnly = true)
-    public Collection<CategoryDto> findAll(){
-        return CategoryFactory.categoriesToCategoriesDtos (this.categoryDao.findAll ());
+    public Collection<CategoryDto> findAll(Pageable pageable){
+        return CategoryFactory.categoriesToCategoriesDtos (this.categoryDao.findAll (pageable).getContent());
     }
 }
