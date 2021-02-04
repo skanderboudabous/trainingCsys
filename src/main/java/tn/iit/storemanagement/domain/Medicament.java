@@ -2,7 +2,6 @@ package tn.iit.storemanagement.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -11,11 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -47,9 +42,6 @@ public class Medicament implements Serializable {
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
-
-    @ManyToMany(mappedBy = "medicaments")
-    private Collection<Composant> composants;
 
     public Medicament(String name, float dosage, float price, Date expiredDate, Category category) {
         this.name = name;

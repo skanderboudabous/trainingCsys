@@ -6,7 +6,6 @@ import tn.iit.storemanagement.domain.Category;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Collection;
 import java.util.Date;
 
 @Data
@@ -27,5 +26,4 @@ public class MedicamentDto {
     private Date expiredDate;
     @NotNull
     private String category;
-    private Collection<String> composants;
 }

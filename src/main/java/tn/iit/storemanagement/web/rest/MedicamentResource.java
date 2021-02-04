@@ -31,21 +31,25 @@ public class MedicamentResource {
         this.medicamentService = medicamentService;
     }
 
+    @GetMapping
+    public Collection<MedicamentDto> getMedicaments(@RequestParam(required=false,value ="name",defaultValue = "") String name , @RequestParam(required=false,value ="category",defaultValue = "") String category){
+        return this.medicamentService.findAllByNameKeyworkandCategoryNameKeyword(name, category);
+    }
     @GetMapping("/{id}")
     public MedicamentDto findOne(@PathVariable("id") long id) {
         this.logger.debug ("Getting Medicament {}",id);
         return this.medicamentService.findOne (id);
     }
 
-    @GetMapping()
-    public Collection<MedicamentDto> findAll(
-            @RequestParam(defaultValue = "0") int pageNo,
-            @RequestParam(defaultValue = "3") int pageSize,
-            @RequestParam(defaultValue = "id") String pageSort
-    ) {
-        this.logger.debug ("Getting all medicaments");
-        return this.medicamentService.findAll (PageRequest.of(pageNo,pageSize, Sort.by (pageSort).ascending ()));
-    }
+//    @GetMapping()
+//    public Collection<MedicamentDto> findAll(
+//            @RequestParam(defaultValue = "0") int pageNo,
+//            @RequestParam(defaultValue = "3") int pageSize,
+//            @RequestParam(defaultValue = "id") String pageSort
+//    ) {
+//        this.logger.debug ("Getting all medicaments");
+//        return this.medicamentService.findAll (PageRequest.of(pageNo,pageSize, Sort.by (pageSort).ascending ()));
+//    }
 
     @PostMapping
     public ResponseEntity<MedicamentDto> add(@Valid @RequestBody MedicamentDto medicamentDto, BindingResult bindingResults) throws URISyntaxException, MethodArgumentNotValidException {
@@ -65,10 +69,6 @@ public class MedicamentResource {
     @PostMapping("/searches")
     public Collection<MedicamentDto> searches(@Valid @RequestBody List<Long> ids){
         return this.medicamentService.findAllByIds(ids);
-    }
-    @PostMapping("/keyword")
-    public Collection<MedicamentDto> getByNameAndCategoryKeywords(@RequestParam(required=false) String name, @RequestParam(required=false) String category){
-        return this.medicamentService.findAllByNameKeyworkandCategoryNameKeyword(name, category);
     }
 
 
