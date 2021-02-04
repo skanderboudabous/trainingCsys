@@ -9,6 +9,6 @@ import java.util.Collection;
 
 @Repository
 public interface MedicamentDao extends JpaRepository<Medicament,Long> {
-    @Query(value = "select * from medicament m, category c where m.name like %:keyword% or (c.name like %:categoryKeyword% and c.id=m.category_id) ",nativeQuery = true)
+    @Query("SELECT m from Medicament m where lower(m.name) like %:keyword% or lower(m.category.name) like %:categoryKeyword%")
     Collection<Medicament> getMedicamentsByNameKeywordAnAndCategoryNameKeyword(String keyword, String categoryKeyword);
 }
